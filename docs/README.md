@@ -3,10 +3,11 @@
 - [ページのアクセス制御と画面分岐](./page-access.md)
 - [基本デザインとレイアウト](./layout.md)
 - [リポジトリの命名](./repository-names.md)
+- [用語の使い分け](./terminology.md)
 
 ## 認証サーバー
 
-ログイン、パスキー、ユーザー作成、共有テーブルの変更は [認証サーバー](https://github.com/czbone/astro-user-webauthn2) が行う。必要な定義は次の確定資料を参照する。
+ログイン、パスキー、ユーザー作成、共有テーブルの変更は [認証サーバー](https://github.com/czbone/astro-user-webauthn2) が行います。必要な定義は、次の確定資料を参照してください。
 
 - [確定資料の索引](https://github.com/czbone/astro-user-webauthn2/blob/main/docs/README.md)
 - [確定仕様](https://github.com/czbone/astro-user-webauthn2/blob/main/docs/specification.md)（引き渡し `GET /auth/handoff` を含む）

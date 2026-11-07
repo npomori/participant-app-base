@@ -22,8 +22,8 @@
 - `header` と `nav` が上部の帯、アプリ名、画面へのリンクです。
 - `/grants` と `/roles` のヘッダーは `bg-black text-white` です。管理画面は黒で共通です。認証サーバーのナビも同じクラスにします。その変更は認証サーバーのリポジトリで行います。
 - `/logged-out` のヘッダーは `bg-brand text-white` です。色の値は参加アプリの `src/styles/global.css` の `--color-brand` に1つ書きます。
-- `main` の `mx-auto max-w-3xl px-4 py-10` が本文の幅と余白です。各ページの中身は `<slot />` に入ります。
-- ヘッダーのアプリ名は integration の `displayName` です。画面へ直書きしません。
+- `main` の `mx-auto max-w-3xl px-4 py-10` が本文の幅と余白です。各ページの内容は `<slot />` に渡します。
+- ヘッダーのアプリ名は integration の `displayName` です。画面にハードコーディングしません。
 
 ```astro
 ---
@@ -81,6 +81,6 @@ import Layout from 'astro-participant-auth/layout'
 
 ## 参加アプリの CSS
 
-`MainLayout.astro` は `virtual:astro-participant-auth/global.css` を読みます。`src/integration.ts` は、これを参加アプリのプロジェクトルートにある `src/styles/global.css` に解決します。ファイルが無いときはビルドを止めます。
+`MainLayout.astro` は `virtual:astro-participant-auth/global.css` を読みます。`src/integration.ts` は、これを参加アプリのプロジェクトルートにある `src/styles/global.css` に解決します。ファイルが存在しない場合はビルドを停止します。
 
 Tailwind のテーマ、フォント、リセットを変えるときは、その CSS を変更します。ユーティリティクラスそのものを変えるときは、このパッケージの Astro ファイルを変更します。

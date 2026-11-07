@@ -25,7 +25,7 @@ description は次の形です。
 Participant app for {対象}. Admits signed-in users and provides the {対象} screens for each role.
 ```
 
-リポジトリは、入場先が分かれる業務ごとに1つ作ります。管理者と会員のような権限では分けません。権限による画面分けは、1つのアプリの中で行います。
+リポジトリは業務ごとに1つ作ります。管理者と会員のような権限の違いでは分けません。権限による画面の分岐は、1つのアプリ内で実装します。
 
 ## 例
 
