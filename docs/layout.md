@@ -4,13 +4,13 @@
 
 ## 変更する場所
 
-| 変えたいもの | ファイル |
-| --- | --- |
-| ヘッダー、ナビ、本文の幅、ページ全体の地色 | `src/layouts/MainLayout.astro` |
-| ログアウトボタン | `src/components/LogoutForm.astro` |
-| 権限がないときの文言と戻りリンク | `src/components/Denied.astro` |
-| 各画面の見出し、表、本文 | `src/pages/` の該当ページ |
-| Tailwind のテーマ、フォント、リセット | 参加アプリの `src/styles/global.css` |
+| 変えたいもの                               | ファイル                             |
+| ------------------------------------------ | ------------------------------------ |
+| ヘッダー、ナビ、本文の幅、ページ全体の地色 | `src/layouts/MainLayout.astro`       |
+| ログアウトボタン                           | `src/components/LogoutForm.astro`    |
+| 権限がないときの文言と戻りリンク           | `src/components/Denied.astro`        |
+| 各画面の見出し、表、本文                   | `src/pages/` の該当ページ            |
+| Tailwind のテーマ、フォント、リセット      | 参加アプリの `src/styles/global.css` |
 
 このパッケージに CSS ファイルはありません。見た目の差分は、各要素の `class` に書いた Tailwind のユーティリティで表します。
 
@@ -20,6 +20,8 @@
 
 - `body` の `bg-gray-50 text-gray-900` がページ全体の地色と文字色です。
 - `header` と `nav` が上部の帯、アプリ名、画面へのリンクです。
+- `/grants` と `/roles` のヘッダーは `bg-black text-white` です。管理画面は黒で共通です。認証サーバーのナビも同じクラスにします。その変更は認証サーバーのリポジトリで行います。
+- `/logged-out` のヘッダーは `bg-brand text-white` です。色の値は参加アプリの `src/styles/global.css` の `--color-brand` に1つ書きます。
 - `main` の `mx-auto max-w-3xl px-4 py-10` が本文の幅と余白です。各ページの中身は `<slot />` に入ります。
 - ヘッダーのアプリ名は integration の `displayName` です。画面へ直書きしません。
 
@@ -30,9 +32,11 @@ import { displayName } from 'virtual:astro-participant-auth/config'
 ---
 
 <body class="bg-gray-50 text-gray-900">
-  <header class="border-b border-gray-200 bg-white">
+  <header class="border-b border-black/10 bg-brand text-white">
     <nav class="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-      <a class="text-lg font-semibold" href="/">{displayName}</a>
+      <a class="text-lg font-semibold text-white" href="/">
+        {displayName}
+      </a>
     </nav>
   </header>
   <main class="mx-auto max-w-3xl px-4 py-10">
@@ -40,6 +44,14 @@ import { displayName } from 'virtual:astro-participant-auth/config'
   </main>
 </body>
 ```
+
+```css
+@theme {
+  --color-brand: #166534;
+}
+```
+
+参加アプリの業務画面は、ページごとにレイアウトを選びます。公開ページは `FrontLayout` でヘッダーを `bg-brand text-white` にします。管理ページは `AdminLayout` でヘッダーを `bg-black text-white` にします。幅やサイドバーは管理レイアウトに書きます。フロントの「ログイン」は、`publicPaths` に無い管理パス（例: `/admin`）へ向けます。このパッケージの `/logged-out` の「ログイン」は `/` です。
 
 ヘッダーのリンクとログアウトは、`Astro.locals.access` で出し分けます。出し分けの書き方は [ページのアクセス制御と画面分岐](./page-access.md) に従います。ログアウトは `POST /logout` のフォームです。
 
@@ -59,11 +71,11 @@ import Layout from 'astro-participant-auth/layout'
 
 共通レイアウトを使っている画面は次のとおりです。見出し、表、リンクのクラスは各ページに直接書いてあります。見出しは `text-2xl font-semibold`、リンクは `text-blue-700 underline` です。
 
-| パス | ファイル | 中身 |
-| --- | --- | --- |
-| `/logged-out` | `src/pages/logged-out.astro` | ログアウト後の案内 |
-| `/grants` | `src/pages/grants.astro` | 利用許可の例外の表 |
-| `/roles` | `src/pages/roles.astro` | アプリ内ロールの案内 |
+| パス          | ファイル                     | 中身                 |
+| ------------- | ---------------------------- | -------------------- |
+| `/logged-out` | `src/pages/logged-out.astro` | ログアウト後の案内   |
+| `/grants`     | `src/pages/grants.astro`     | 利用許可の例外の表   |
+| `/roles`      | `src/pages/roles.astro`      | アプリ内ロールの案内 |
 
 `src/pages/callback.astro` は HTML を描かず、引き渡しのあとリダイレクトします。ここにはレイアウトもスタイルもありません。
 

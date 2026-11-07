@@ -4,6 +4,7 @@ import { access } from './access'
 import { registerMutations } from '../mutations'
 import { cookieStore } from '../server/auth/cookie-store'
 import { SESSION_COOKIE } from '../server/auth/cookies'
+import { registerPublicPaths } from '../server/auth/public-paths'
 import type { PageAccess } from '../server/auth/access'
 import {
   putSession,
@@ -12,7 +13,7 @@ import {
   sessionTtl,
   sessionValue
 } from '../test/integration-db'
-import { APP_ID, APP_ORIGIN, SESSION_TTL_SECONDS } from '../test/integration-env'
+import { APP_ID, APP_ORIGIN, AUTH_ORIGIN, SESSION_TTL_SECONDS } from '../test/integration-env'
 
 registerMutations([{ method: 'POST', path: '/example' }])
 
@@ -58,6 +59,7 @@ async function runAccess(request: Request): Promise<{
 
 describe('access middleware mutations', () => {
   beforeEach(async () => {
+    registerPublicPaths([])
     await resetStores()
   })
 
@@ -153,6 +155,53 @@ describe('access middleware mutations', () => {
 
   it('未認証のログアウトは 401 で次へ進まない', async () => {
     const { response, proceeded } = await runAccess(mutationRequest('/logout', null))
+    expect(response.status).toBe(401)
+    expect(await response.text()).toBe('ログインが必要です')
+    expect(proceeded).toBe(false)
+  })
+})
+
+describe('access middleware public paths', () => {
+  beforeEach(async () => {
+    registerPublicPaths(['/', '/about', '/news/*'])
+    await resetStores()
+  })
+
+  it('登録した GET は未ログインでも本文へ進む', async () => {
+    const { response, locals, proceeded } = await runAccess(
+      new Request(new URL('/news/1', APP_ORIGIN))
+    )
+    expect(response.status).toBe(204)
+    expect(proceeded).toBe(true)
+    expect(locals.access).toEqual({ kind: 'public' })
+  })
+
+  it('未登録の GET は引き渡しへ進む', async () => {
+    const { response, proceeded } = await runAccess(new Request(new URL('/admin', APP_ORIGIN)))
+    const location = response.headers.get('location')
+    expect(response.status).toBe(302)
+    expect(location).toBeTruthy()
+    const target = new URL(location ?? 'http://invalid')
+    expect(target.origin).toBe(AUTH_ORIGIN)
+    expect(target.pathname).toBe('/auth/handoff')
+    expect(target.searchParams.get('app')).toBe(APP_ID)
+    expect(target.searchParams.get('redirect_uri')).toBe(`${APP_ORIGIN}/callback`)
+    expect(target.searchParams.get('state')).toBeTruthy()
+    expect(proceeded).toBe(false)
+  })
+
+  it('完全一致の配下は引き渡しへ進む', async () => {
+    const home = await runAccess(new Request(new URL('/', APP_ORIGIN)))
+    expect(home.proceeded).toBe(true)
+    expect(home.locals.access).toEqual({ kind: 'public' })
+
+    const nested = await runAccess(new Request(new URL('/about/more', APP_ORIGIN)))
+    expect(nested.proceeded).toBe(false)
+    expect(nested.response.status).toBe(302)
+  })
+
+  it('登録パスへの未認証 POST は 401 で次へ進まない', async () => {
+    const { response, proceeded } = await runAccess(mutationRequest('/about', null))
     expect(response.status).toBe(401)
     expect(await response.text()).toBe('ログインが必要です')
     expect(proceeded).toBe(false)

@@ -2,10 +2,13 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import type { AstroIntegration } from 'astro'
+import { compilePublicPaths } from './server/auth/public-paths'
 
 const VIRTUAL_CONFIG = 'virtual:astro-participant-auth/config'
+const VIRTUAL_PUBLIC = 'virtual:astro-participant-auth/public-paths'
 const VIRTUAL_CSS = 'virtual:astro-participant-auth/global.css'
 const RESOLVED_CONFIG = '\0virtual:astro-participant-auth/config'
+const RESOLVED_PUBLIC = '\0virtual:astro-participant-auth/public-paths'
 
 const PAGES = [
   ['/callback', './pages/callback.astro'],
@@ -16,6 +19,7 @@ const PAGES = [
 
 export type ParticipantAuthOptions = {
   displayName: string
+  publicPaths?: readonly string[]
 }
 
 function appRootUrl(root: URL | string): URL {
@@ -29,6 +33,8 @@ function appRootUrl(root: URL | string): URL {
 export default function participantAuth(options: ParticipantAuthOptions): AstroIntegration {
   const displayName = options.displayName.trim()
   if (!displayName) throw new Error('displayName は空にできません')
+  const publicPaths = options.publicPaths ?? []
+  compilePublicPaths(publicPaths)
 
   return {
     name: 'astro-participant-auth',
@@ -59,12 +65,16 @@ export default function participantAuth(options: ParticipantAuthOptions): AstroI
                 name: 'astro-participant-auth-virtual',
                 resolveId(id) {
                   if (id === VIRTUAL_CONFIG) return RESOLVED_CONFIG
+                  if (id === VIRTUAL_PUBLIC) return RESOLVED_PUBLIC
                   if (id === VIRTUAL_CSS) return cssFile
                   return undefined
                 },
                 load(id) {
                   if (id === RESOLVED_CONFIG) {
                     return `export const displayName = ${JSON.stringify(displayName)}\n`
+                  }
+                  if (id === RESOLVED_PUBLIC) {
+                    return `export const publicPaths = ${JSON.stringify(publicPaths)}\n`
                   }
                   return undefined
                 }

@@ -4,6 +4,7 @@ import { resolveAccess, slideSession } from '../server/auth/access'
 import { clearSessionCookie, readCookie, SESSION_COOKIE } from '../server/auth/cookies'
 import { startHandoff } from '../server/auth/handoff'
 import { isAllowedOrigin, isUnsafeMethod } from '../server/auth/origin'
+import { isRegisteredPublicPath } from '../server/auth/public-paths'
 import { isStaticAsset } from '../server/auth/return-path'
 import { textResponse } from '../server/auth/responses'
 import { participantEnv } from '../server/env'
@@ -46,7 +47,11 @@ export const access = defineMiddleware(async (context, next) => {
     return next()
   }
 
-  if (PUBLIC_PATHS.has(url.pathname) || isStaticAsset(url.pathname)) {
+  if (
+    PUBLIC_PATHS.has(url.pathname) ||
+    isStaticAsset(url.pathname) ||
+    isRegisteredPublicPath(url.pathname)
+  ) {
     context.locals.access = { kind: 'public' }
     return next()
   }

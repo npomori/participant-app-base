@@ -8,13 +8,13 @@
 
 ## 公開口
 
-| 入口 | 内容 |
-| --- | --- |
-| `astro-participant-auth` | `createParticipantFetch`、`PageAccess`、`roleLabel` |
-| `astro-participant-auth/integration` | 入場ミドルウェアと4画面の注入。設定は表示名だけ |
-| `astro-participant-auth/middleware` | 入場 |
-| `astro-participant-auth/layout` | 業務画面のヘッダ |
-| `astro-participant-auth/env-check` | 起動前の環境値チェック |
+| 入口                                 | 内容                                                                |
+| ------------------------------------ | ------------------------------------------------------------------- |
+| `astro-participant-auth`             | `createParticipantFetch`、`PageAccess`、`roleLabel`                 |
+| `astro-participant-auth/integration` | 入場ミドルウェアと4画面の注入。設定は表示名と、任意の `publicPaths` |
+| `astro-participant-auth/middleware`  | 入場                                                                |
+| `astro-participant-auth/layout`      | 業務画面のヘッダ                                                    |
+| `astro-participant-auth/env-check`   | 起動前の環境値チェック                                              |
 
 `astro/app` と `astro/hono` はこのパッケージから import しません。参加アプリが引数で渡します。
 
@@ -30,11 +30,11 @@ pnpm install
 
 ## コマンド
 
-| コマンド | 説明 |
-| --- | --- |
-| `pnpm test` | ユニットテスト |
-| `pnpm test:integration` | 起動済みの PostgreSQL と Redis への統合テスト |
-| `pnpm test:all` | ユニットテストのあと統合テスト |
-| `pnpm db:ensure-test` | `TEST_DATABASE_URL` のデータベースが無ければ作る |
-| `pnpm db:generate` | 読み取り用 Prisma Client の生成 |
-| `pnpm lint` | ESLint |
+| コマンド                | 説明                                             |
+| ----------------------- | ------------------------------------------------ |
+| `pnpm test`             | ユニットテスト                                   |
+| `pnpm test:integration` | 起動済みの PostgreSQL と Redis への統合テスト    |
+| `pnpm test:all`         | ユニットテストのあと統合テスト                   |
+| `pnpm db:ensure-test`   | `TEST_DATABASE_URL` のデータベースが無ければ作る |
+| `pnpm db:generate`      | 読み取り用 Prisma Client の生成                  |
+| `pnpm lint`             | ESLint                                           |
