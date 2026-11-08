@@ -1,4 +1,4 @@
-# astro-participant-auth
+# participant-app-base
 
 参加アプリの認証基盤です。引き渡し、セッション、入場、ログアウト、共有テーブルの参照を提供します。ログイン、パスキー、ユーザー作成は提供しません。
 
@@ -10,11 +10,11 @@
 
 | 入口                                 | 内容                                                                |
 | ------------------------------------ | ------------------------------------------------------------------- |
-| `astro-participant-auth`             | `createParticipantFetch`、`PageAccess`、`roleLabel`                 |
-| `astro-participant-auth/integration` | 入場ミドルウェアと4画面を組み込む。設定項目は表示名と任意の `publicPaths` |
-| `astro-participant-auth/middleware`  | 入場                                                                |
-| `astro-participant-auth/layout`      | 業務画面のヘッダ                                                    |
-| `astro-participant-auth/env-check`   | 起動前の環境値チェック                                              |
+| `participant-app-base`             | `createParticipantFetch`、`PageAccess`、`roleLabel`                 |
+| `participant-app-base/integration` | 入場ミドルウェアと4画面を組み込む。設定項目は表示名と任意の `publicPaths` |
+| `participant-app-base/middleware`  | 入場                                                                |
+| `participant-app-base/layout`      | 業務画面のヘッダ                                                    |
+| `participant-app-base/env-check`   | 起動前の環境値チェック                                              |
 
 `astro/app` と `astro/hono` はこのパッケージから import しません。参加アプリが引数で渡します。
 

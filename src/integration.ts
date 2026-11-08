@@ -4,11 +4,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import type { AstroIntegration } from 'astro'
 import { compilePublicPaths } from './server/auth/public-paths'
 
-const VIRTUAL_CONFIG = 'virtual:astro-participant-auth/config'
-const VIRTUAL_PUBLIC = 'virtual:astro-participant-auth/public-paths'
-const VIRTUAL_CSS = 'virtual:astro-participant-auth/global.css'
-const RESOLVED_CONFIG = '\0virtual:astro-participant-auth/config'
-const RESOLVED_PUBLIC = '\0virtual:astro-participant-auth/public-paths'
+const VIRTUAL_CONFIG = 'virtual:participant-app-base/config'
+const VIRTUAL_PUBLIC = 'virtual:participant-app-base/public-paths'
+const VIRTUAL_CSS = 'virtual:participant-app-base/global.css'
+const RESOLVED_CONFIG = '\0virtual:participant-app-base/config'
+const RESOLVED_PUBLIC = '\0virtual:participant-app-base/public-paths'
 
 const PAGES = [
   ['/callback', './pages/callback.astro'],
@@ -37,7 +37,7 @@ export default function participantAuth(options: ParticipantAuthOptions): AstroI
   compilePublicPaths(publicPaths)
 
   return {
-    name: 'astro-participant-auth',
+    name: 'participant-app-base',
     hooks: {
       'astro:config:setup': ({ addMiddleware, injectRoute, updateConfig, config }) => {
         const cssFile = fileURLToPath(new URL('src/styles/global.css', appRootUrl(config.root)))
@@ -46,7 +46,7 @@ export default function participantAuth(options: ParticipantAuthOptions): AstroI
         }
 
         addMiddleware({
-          entrypoint: 'astro-participant-auth/middleware',
+          entrypoint: 'participant-app-base/middleware',
           order: 'pre'
         })
 
@@ -62,7 +62,7 @@ export default function participantAuth(options: ParticipantAuthOptions): AstroI
           vite: {
             plugins: [
               {
-                name: 'astro-participant-auth-virtual',
+                name: 'participant-app-base-virtual',
                 resolveId(id) {
                   if (id === VIRTUAL_CONFIG) return RESOLVED_CONFIG
                   if (id === VIRTUAL_PUBLIC) return RESOLVED_PUBLIC
@@ -81,7 +81,7 @@ export default function participantAuth(options: ParticipantAuthOptions): AstroI
               }
             ],
             ssr: {
-              noExternal: ['astro-participant-auth'],
+              noExternal: ['participant-app-base'],
               external: ['@prisma/client', '@prisma/adapter-pg', 'pg', 'ioredis', 'dotenv']
             }
           }

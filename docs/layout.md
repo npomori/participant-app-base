@@ -16,7 +16,7 @@
 
 ## 共通レイアウト
 
-`src/layouts/MainLayout.astro` が HTML の枠です。参加アプリの業務画面からも `astro-participant-auth/layout` として同じファイルを使います。
+`src/layouts/MainLayout.astro` が HTML の枠です。参加アプリの業務画面からも `participant-app-base/layout` として同じファイルを使います。
 
 - `body` の `bg-gray-50 text-gray-900` がページ全体の地色と文字色です。
 - `header` と `nav` が上部の帯、アプリ名、画面へのリンクです。
@@ -27,8 +27,8 @@
 
 ```astro
 ---
-import 'virtual:astro-participant-auth/global.css'
-import { displayName } from 'virtual:astro-participant-auth/config'
+import 'virtual:participant-app-base/global.css'
+import { displayName } from 'virtual:participant-app-base/config'
 ---
 
 <body class="bg-gray-50 text-gray-900">
@@ -59,7 +59,7 @@ import { displayName } from 'virtual:astro-participant-auth/config'
 
 ```astro
 ---
-import Layout from 'astro-participant-auth/layout'
+import Layout from 'participant-app-base/layout'
 ---
 
 <Layout title="画面タイトル">
@@ -81,6 +81,6 @@ import Layout from 'astro-participant-auth/layout'
 
 ## 参加アプリの CSS
 
-`MainLayout.astro` は `virtual:astro-participant-auth/global.css` を読みます。`src/integration.ts` は、これを参加アプリのプロジェクトルートにある `src/styles/global.css` に解決します。ファイルが存在しない場合はビルドを停止します。
+`MainLayout.astro` は `virtual:participant-app-base/global.css` を読みます。`src/integration.ts` は、これを参加アプリのプロジェクトルートにある `src/styles/global.css` に解決します。ファイルが存在しない場合はビルドを停止します。
 
 Tailwind のテーマ、フォント、リセットを変えるときは、その CSS を変更します。ユーティリティクラスそのものを変えるときは、このパッケージの Astro ファイルを変更します。
