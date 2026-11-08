@@ -4,7 +4,7 @@
 
 仕様の正本は、この参加アプリの `docs/` です。アクセス制御は `page-access.md`、レイアウトは `layout.md` に記載しています。
 
-認証サーバーの資料は [czbone/astro-user-webauthn2](https://github.com/czbone/astro-user-webauthn2) の [docs/](https://github.com/czbone/astro-user-webauthn2/blob/main/docs/README.md) です。詳細は [確定資料](docs/README.md) にあります。
+認証サーバーの資料は [npomori/auth-server](https://github.com/npomori/auth-server) の [docs/](https://github.com/npomori/auth-server/blob/main/docs/README.md) です。詳細は [確定資料](docs/README.md) にあります。
 
 ## 公開 API
 
